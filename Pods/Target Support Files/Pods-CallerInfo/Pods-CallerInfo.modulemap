@@ -1,0 +1,6 @@
+framework module Pods_CallerInfo {
+  umbrella header "Pods-CallerInfo-umbrella.h"
+
+  export *
+  module * { export * }
+}
