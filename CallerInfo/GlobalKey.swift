@@ -8,6 +8,6 @@
 
 import Foundation
 
-let appGroupKey = "group.com.youqian.chahaoyouShareDefaults"
+let appGroupKey = "group.youqian.callerInfo.shareDefaults"
 let namePhoneDictKey = "com.hj.callerInfo.namePhoneDictKey"
 let callExtensionIndentifier = "com.HJ.CallerInfo.CallDirectoryExtension"

@@ -5,5 +5,6 @@ target 'CallerInfo' do
 pod 'FMDB'
 end
     
-pod 'CallDirectoryExtension' do
+target 'CallDirectoryExtension' do
+pod 'FMDB'
 end

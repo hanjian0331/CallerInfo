@@ -8,18 +8,28 @@
 
 import Foundation
 import CallKit
+import FMDB
 
 class CallDirectoryHandler: CXCallDirectoryProvider {
-
-    let phoneNumberDict: [NSNumber:String]? = {
-        let defaults = UserDefaults(suiteName: appGroupKey)
-        return defaults?.object(forKey: namePhoneDictKey) as? [NSNumber:String]
-    }()
-    
     
     override func beginRequest(with context: CXCallDirectoryExtensionContext) {
         context.delegate = self
 
+        var containerURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupKey)
+        containerURL?.appendPathComponent("caller_210.db")
+        let patch = (containerURL?.relativeString)!.replacingOccurrences(of: "file://", with: "")
+        let exists = FileManager.default.fileExists(atPath: patch)
+        
+        
+        guard let database = FMDatabase(path: patch) else {
+            print("unable to create database")
+            return
+        }
+        
+        guard database.open() else {
+            print("Unable to open database")
+            return
+        }
 //        do {
 //            try addBlockingPhoneNumbers(to: context)
 //        } catch {
@@ -29,14 +39,14 @@ class CallDirectoryHandler: CXCallDirectoryProvider {
 //            return
 //        }
 
-        do {
-            try addIdentificationPhoneNumbers(to: context)
-        } catch {
-            NSLog("Unable to add identification phone numbers")
-            let error = NSError(domain: "CallDirectoryHandler", code: 2, userInfo: nil)
-            context.cancelRequest(withError: error)
-            return
-        }
+//        do {
+//            try addIdentificationPhoneNumbers(to: context)
+//        } catch {
+//            NSLog("Unable to add identification phone numbers")
+//            let error = NSError(domain: "CallDirectoryHandler", code: 2, userInfo: nil)
+//            context.cancelRequest(withError: error)
+//            return
+//        }
 
         context.completeRequest()
     }
@@ -58,24 +68,12 @@ class CallDirectoryHandler: CXCallDirectoryProvider {
         // consider only loading a subset of numbers at a given time and using autorelease pool(s) to release objects allocated during each batch of numbers which are loaded.
         //
         // Numbers must be provided in numerically ascending order.
-//        let phoneNumbers: [CXCallDirectoryPhoneNumber] = [ 18775555555, 18885555555 ]
+//        let phoneNumbers: [CXCallDirectoryPhoneNumber] = [ 18775555555, 8618885555555 ]
 //        let labels = [ "Telemarketer", "Local business" ]
 //
 //        for (phoneNumber, label) in zip(phoneNumbers, labels) {
 //            context.addIdentificationEntry(withNextSequentialPhoneNumber: phoneNumber, label: label)
 //        }
-        
-        if let phoneNumberDict = phoneNumberDict {
-            let keys = phoneNumberDict.keys
-            let shortedKeys = keys.sorted(by: { (n1: NSNumber, n2: NSNumber) -> Bool in
-                return n1.compare(n2) == ComparisonResult.orderedAscending
-            })
-            for phone in shortedKeys {
-                context.addIdentificationEntry(withNextSequentialPhoneNumber: CXCallDirectoryPhoneNumber(phone), label: phoneNumberDict[phone]!)
-            }
-        }
-    
-
 
     }
 

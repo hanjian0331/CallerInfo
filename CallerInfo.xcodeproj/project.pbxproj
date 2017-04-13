@@ -17,6 +17,7 @@
 		5033FBA21E9E0C4E001B5FBE /* CallDirectoryExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 5033FB9B1E9E0C4E001B5FBE /* CallDirectoryExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		5033FBAB1E9E113D001B5FBE /* GlobalKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5033FBAA1E9E113D001B5FBE /* GlobalKey.swift */; };
 		5033FBAC1E9E113D001B5FBE /* GlobalKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5033FBAA1E9E113D001B5FBE /* GlobalKey.swift */; };
+		8D558D9057C66D87981518D7 /* Pods_CallDirectoryExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77BA575695AF3E537157297B /* Pods_CallDirectoryExtension.framework */; };
 		DF5F34C25B6ED4D0E2283B18 /* Pods_CallerInfo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1449975F945C6A0038447477 /* Pods_CallerInfo.framework */; };
 /* End PBXBuildFile section */
 
@@ -60,7 +61,10 @@
 		5033FBA71E9E109B001B5FBE /* CallerInfo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CallerInfo.entitlements; sourceTree = "<group>"; };
 		5033FBA81E9E109F001B5FBE /* CallDirectoryExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CallDirectoryExtension.entitlements; sourceTree = "<group>"; };
 		5033FBAA1E9E113D001B5FBE /* GlobalKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlobalKey.swift; sourceTree = "<group>"; };
+		58F0BA57F05B49D7F612E483 /* Pods-CallDirectoryExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CallDirectoryExtension.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CallDirectoryExtension/Pods-CallDirectoryExtension.debug.xcconfig"; sourceTree = "<group>"; };
+		77BA575695AF3E537157297B /* Pods_CallDirectoryExtension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CallDirectoryExtension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9083E73E0A5EA33D42037B5B /* Pods-CallerInfo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CallerInfo.release.xcconfig"; path = "Pods/Target Support Files/Pods-CallerInfo/Pods-CallerInfo.release.xcconfig"; sourceTree = "<group>"; };
+		ADDF6F52FCAA4DEA4DFE48D0 /* Pods-CallDirectoryExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CallDirectoryExtension.release.xcconfig"; path = "Pods/Target Support Files/Pods-CallDirectoryExtension/Pods-CallDirectoryExtension.release.xcconfig"; sourceTree = "<group>"; };
 		C3E48FC29C4AC6217FA38BA0 /* Pods-CallerInfo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CallerInfo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CallerInfo/Pods-CallerInfo.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -77,6 +81,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8D558D9057C66D87981518D7 /* Pods_CallDirectoryExtension.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -142,6 +147,8 @@
 			children = (
 				C3E48FC29C4AC6217FA38BA0 /* Pods-CallerInfo.debug.xcconfig */,
 				9083E73E0A5EA33D42037B5B /* Pods-CallerInfo.release.xcconfig */,
+				58F0BA57F05B49D7F612E483 /* Pods-CallDirectoryExtension.debug.xcconfig */,
+				ADDF6F52FCAA4DEA4DFE48D0 /* Pods-CallDirectoryExtension.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -150,6 +157,7 @@
 			isa = PBXGroup;
 			children = (
 				1449975F945C6A0038447477 /* Pods_CallerInfo.framework */,
+				77BA575695AF3E537157297B /* Pods_CallDirectoryExtension.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -183,9 +191,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5033FBA31E9E0C4E001B5FBE /* Build configuration list for PBXNativeTarget "CallDirectoryExtension" */;
 			buildPhases = (
+				C8681D564D1E31D2ED668478 /* [CP] Check Pods Manifest.lock */,
 				5033FB971E9E0C4E001B5FBE /* Sources */,
 				5033FB981E9E0C4E001B5FBE /* Frameworks */,
 				5033FB991E9E0C4E001B5FBE /* Resources */,
+				90432CA6E207DF8AEFA6B486 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -297,6 +307,36 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CallerInfo/Pods-CallerInfo-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		90432CA6E207DF8AEFA6B486 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CallDirectoryExtension/Pods-CallDirectoryExtension-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C8681D564D1E31D2ED668478 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		EC862A9A8EE658C71AC8836C /* [CP] Check Pods Manifest.lock */ = {
@@ -495,8 +535,8 @@
 		};
 		5033FBA41E9E0C4E001B5FBE /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 58F0BA57F05B49D7F612E483 /* Pods-CallDirectoryExtension.debug.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CODE_SIGN_ENTITLEMENTS = CallDirectoryExtension/CallDirectoryExtension.entitlements;
 				DEVELOPMENT_TEAM = 5C5EP7HT6Q;
 				INFOPLIST_FILE = CallDirectoryExtension/Info.plist;
@@ -511,8 +551,8 @@
 		};
 		5033FBA51E9E0C4E001B5FBE /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = ADDF6F52FCAA4DEA4DFE48D0 /* Pods-CallDirectoryExtension.release.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CODE_SIGN_ENTITLEMENTS = CallDirectoryExtension/CallDirectoryExtension.entitlements;
 				DEVELOPMENT_TEAM = 5C5EP7HT6Q;
 				INFOPLIST_FILE = CallDirectoryExtension/Info.plist;
@@ -553,6 +593,7 @@
 				5033FBA51E9E0C4E001B5FBE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
