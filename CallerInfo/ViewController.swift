@@ -14,6 +14,13 @@ class ViewController: UIViewController {
 
     @IBOutlet weak var updateButton: UIButton!
     
+    var database: FMDatabase? 
+    var containerPath: String? {
+        didSet{
+            database = FMDatabase(path: containerPath)
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(applicationWillEnterForeground), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
@@ -22,21 +29,57 @@ class ViewController: UIViewController {
         let path = Bundle.main.path(forResource: "caller_210", ofType: "db")
         var containerURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupKey)
         containerURL?.appendPathComponent("caller_210.db")
-        let s = (containerURL?.relativeString)!.replacingOccurrences(of: "file://", with: "")
-        let exists = FileManager.default.fileExists(atPath: s)
+        containerPath = (containerURL?.relativeString)!.replacingOccurrences(of: "file://", with: "")
+        let exists = FileManager.default.fileExists(atPath: containerPath!)
         if !exists {
             do {
                 try FileManager.default.copyItem(at: URL.init(fileURLWithPath: path!), to: containerURL!)
             } catch {
                 print(error)
             }
+            creatTable()
         }
-
         
-        
+        applicationWillEnterForeground()
     }
     
 
+    private func creatTable(){
+
+        if database == nil {
+            return;
+        }
+        guard database!.open() else {
+            print("Unable to open database")
+            return
+        }
+        do {
+            try database!.executeUpdate("create table if not exists updateStatus(c int)", values: nil)
+            try database!.executeUpdate("insert into updateStatus (c) values (?)", values: ["0"])
+        } catch {
+            print("failed: \(error.localizedDescription)")
+        }
+        database!.close()
+    }
+    
+    private func resetUpdateStatus(){
+        
+        if database == nil {
+            return;
+        }
+        guard database!.open() else {
+            print("Unable to open database")
+            return
+        }
+        do {
+            try database!.executeUpdate("update updateStatus set c = 0", values: nil)
+        } catch {
+            print("failed: \(error.localizedDescription)")
+        }
+        database!.close()
+    }
+    
+    
     @objc private func applicationWillEnterForeground(){
         CXCallDirectoryManager.sharedInstance.getEnabledStatusForExtension(withIdentifier: callExtensionIndentifier) { [weak self] (enabledStatus, error) in
             DispatchQueue.main.async {
@@ -65,90 +108,40 @@ class ViewController: UIViewController {
         sender.isEnabled = false
         sender.setTitle("正在更新中...", for: .normal)
         
-        CXCallDirectoryManager.sharedInstance.getEnabledStatusForExtension(withIdentifier: callExtensionIndentifier) { [weak self] (enabledStatus, error) in
-            DispatchQueue.main.async {
-                switch enabledStatus {
-                case .unknown:
-                    self?.updateButton.setTitle("获取号码识别打开状态失败", for: .normal)
-                    break
-                case .enabled:
-//                    self?.fecthPhones()
-                    self?.reloadPhones()
-                    break
-                case .disabled:
-                    self?.updateButton.setTitle("未打开号码识别！", for: .normal)
-                    break
-                    
-                }
-            }
-        }
+        resetUpdateStatus()
+        
+        reloadExtension()
+        
+
 
     }
 
-    
-    private func fecthPhones() {
-        let defaults = UserDefaults(suiteName: appGroupKey)
-//        if ((defaults?.object(forKey: namePhoneDictKey)) != nil) {
-//            return
-//        }
-        
-        let path = Bundle.main.path(forResource: "caller_210", ofType: "db")
-        guard let database = FMDatabase(path: path) else {
-            print("unable to create database")
-            return
-        }
-        guard database.open() else {
-            print("Unable to open database")
-            return
-        }
-        
-        var phoneNameDict = [String:String]()
-        do {
-            let rs = try database.executeQuery("select * from caller", values: nil)
-            
-            var count = 0
-            while rs.next() {
-                count += 1
-
-                
-                if let name = rs.string(forColumn: "name") {
-                    var phone = rs.string(forColumn: "number")
-                    if phone == nil {
-                        continue
-                    }
-                    
-                    phone = phone?.replacingOccurrences(of: "+0086", with: "")
-                    phone = phone?.replacingOccurrences(of: "+", with: "")
-                    phone = "86" + phone!
-                    let length = phone!.characters.count
-                    if length > 4 && length < 14 {
-                        if count > 9000 && count <= 18000{
-                            phoneNameDict[phone!] = name
-                        }
-                    }
-                    
-
-                }
-            }
-        } catch {
-            print("failed: \(error.localizedDescription)")
-        }
-        
-        database.close()
-        defaults?.set(phoneNameDict, forKey: namePhoneDictKey)
-        defaults?.synchronize()
-    }
-    
-    private func reloadPhones() {
-        CXCallDirectoryManager.sharedInstance.reloadExtension(withIdentifier: callExtensionIndentifier) { [weak self] (error: Error?) in
+    private func reloadExtension(){
+        CXCallDirectoryManager.sharedInstance.reloadExtension(withIdentifier: callExtensionIndentifier) {  [weak self] (error) in
             DispatchQueue.main.async {
                 if (error == nil) {
-                    self?.updateButton.setTitle("更新成功", for: .normal)
+                    if let database = self?.database{
+                        guard database.open() else {
+                            return
+                        }
+                        var count: Int?
+                        if let rs = try? database.executeQuery("select c from updateStatus", values: nil) {
+                            if rs.next() {
+                                count = Int(rs.longLongInt(forColumn: "c"))
+                            }
+                        }
+                        if count != nil && count! < 140000 {
+                            self?.updateButton.setTitle("目前：\(count!)", for: .normal)
+                            self?.reloadExtension()
+                        }else{
+                            self?.updateButton.isEnabled = true
+                            self?.updateButton.setTitle("成功", for: .normal)
+                        }
+                        
+                        
+                    }
                 }else{
-                    print(error!)
-                    
-                    self?.updateButton.isEnabled = true
-                    self?.updateButton.setTitle("失败,点击重试", for: .normal)
+                    self?.updateButton.setTitle("失败", for: .normal)
                 }
             }
         }
